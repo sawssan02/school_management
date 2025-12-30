@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Séquence pour les matricules étudiants -->
+        <record id="sequence_school_student" model="ir.sequence">
+            <field name="name">Matricule Étudiant</field>
+            <field name="code">school.student</field>
+            <field name="prefix">STU</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Séquence pour les matricules enseignants -->
+        <record id="sequence_school_teacher" model="ir.sequence">
+            <field name="name">Matricule Enseignant</field>
+            <field name="code">school.teacher</field>
+            <field name="prefix">TCH</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

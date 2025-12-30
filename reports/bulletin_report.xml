@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Template pour Bulletin de notes -->
+        <template id="report_bulletin">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="student">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div class="text-center">
+                                <h2>Bulletin de Notes</h2>
+                                <h3 t-field="student.name"/>
+                                <p>Matricule: <t t-field="student.registration_number"/></p>
+                                <p>Classe: <t t-field="student.class_id.name"/></p>
+                            </div>
+                            
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <h4>Résumé Académique</h4>
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td><strong>Moyenne Générale:</strong></td>
+                                            <td><t t-esc="'%.2f' % student.average_grade"/>/20</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Nombre total de notes:</strong></td>
+                                            <td><t t-esc="len(student.grade_ids)"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Taux de présence:</strong></td>
+                                            <td><t t-esc="'%.2f' % student.attendance_rate"/>%</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Notes par semestre -->
+                            <t t-foreach="['1', '2']" t-as="semester">
+                                <t t-set="semester_grades" t-value="student.grade_ids.filtered(lambda g: g.semester == semester)"/>
+                                <t t-if="semester_grades">
+                                    <div class="row mt-4">
+                                        <div class="col-12">
+                                            <h4>Semestre <t t-esc="semester"/></h4>
+                                            <table class="table table-bordered table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Cours</th>
+                                                        <th>Type d'évaluation</th>
+                                                        <th>Note</th>
+                                                        <th>Max</th>
+                                                        <th>Pourcentage</th>
+                                                        <th>Lettre</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr t-foreach="semester_grades" t-as="grade">
+                                                        <td><t t-field="grade.date"/></td>
+                                                        <td><t t-field="grade.course_id.name"/></td>
+                                                        <td><t t-field="grade.evaluation_type"/></td>
+                                                        <td><t t-esc="'%.2f' % grade.grade"/></td>
+                                                        <td><t t-esc="'%.2f' % grade.max_grade"/></td>
+                                                        <td><t t-esc="'%.2f' % grade.percentage"/>%</td>
+                                                        <td><t t-field="grade.grade_letter"/></td>
+                                                    </tr>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <td colspan="6" class="text-right"><strong>Moyenne du Semestre:</strong></td>
+                                                        <td>
+                                                            <strong>
+                                                                <t t-esc="'%.2f' % (sum(semester_grades.mapped('grade')) / len(semester_grades) if semester_grades else 0)"/>/20
+                                                            </strong>
+                                                        </td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </t>
+                            </t>
+
+                            <!-- Notes par cours -->
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <h4>Moyennes par Cours</h4>
+                                    <table class="table table-bordered table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Cours</th>
+                                                <th>Code</th>
+                                                <th>Crédits</th>
+                                                <th>Nombre de notes</th>
+                                                <th>Moyenne</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-set="courses" t-value="student.grade_ids.mapped('course_id')"/>
+                                            <tr t-foreach="courses" t-as="course">
+                                                <t t-set="course_grades" t-value="student.grade_ids.filtered(lambda g: g.course_id == course)"/>
+                                                <td><t t-field="course.name"/></td>
+                                                <td><t t-field="course.code"/></td>
+                                                <td><t t-field="course.credits"/></td>
+                                                <td><t t-esc="len(course_grades)"/></td>
+                                                <td>
+                                                    <t t-esc="'%.2f' % (sum(course_grades.mapped('grade')) / len(course_grades) if course_grades else 0)"/>/20
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Graphique de performance -->
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <h4>Appréciation</h4>
+                                    <t t-if="student.average_grade &gt;= 16">
+                                        <p class="text-success"><strong>Excellent travail! Continue comme ça!</strong></p>
+                                    </t>
+                                    <t t-elif="student.average_grade &gt;= 14">
+                                        <p class="text-info"><strong>Très bien! Bon travail!</strong></p>
+                                    </t>
+                                    <t t-elif="student.average_grade &gt;= 12">
+                                        <p class="text-primary"><strong>Bien! Peut faire mieux.</strong></p>
+                                    </t>
+                                    <t t-elif="student.average_grade &gt;= 10">
+                                        <p class="text-warning"><strong>Passable. Plus d'efforts nécessaires.</strong></p>
+                                    </t>
+                                    <t t-else="">
+                                        <p class="text-danger"><strong>Insuffisant. Redoublement d'efforts requis.</strong></p>
+                                    </t>
+                                </div>
+                            </div>
+
+                            <div class="row mt-5">
+                                <div class="col-6">
+                                    <p>Date: <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/></p>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <p>Signature du Directeur: ________________</p>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Template pour Emploi du temps de la classe -->
+        <template id="report_class_schedule">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="class_obj">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div class="text-center">
+                                <h2>Emploi du Temps</h2>
+                                <h3 t-field="class_obj.name"/>
+                                <p>Code: <t t-field="class_obj.code"/> - Niveau: <t t-field="class_obj.level"/></p>
+                                <p>Enseignant principal: <t t-field="class_obj.class_teacher_id.name"/></p>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Jour</th>
+                                                <th>Heure</th>
+                                                <th>Cours</th>
+                                                <th>Enseignant</th>
+                                                <th>Salle</th>
+                                                <th>Type</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-set="days" t-value="['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']"/>
+                                            <t t-foreach="days" t-as="day">
+                                                <t t-set="day_schedules" t-value="class_obj.schedule_ids.filtered(lambda s: s.day_of_week == day).sorted(key=lambda s: s.start_time)"/>
+                                                <t t-if="day_schedules">
+                                                    <tr t-foreach="day_schedules" t-as="schedule">
+                                                        <td t-if="schedule_index == 0" t-att-rowspan="len(day_schedules)">
+                                                            <t t-esc="dict(schedule._fields['day_of_week'].selection).get(day)"/>
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="'{:02d}:{:02d}'.format(int(schedule.start_time), int((schedule.start_time % 1) * 60))"/> - 
+                                                            <t t-esc="'{:02d}:{:02d}'.format(int(schedule.end_time), int((schedule.end_time % 1) * 60))"/>
+                                                        </td>
+                                                        <td><t t-field="schedule.course_id.name"/></td>
+                                                        <td><t t-field="schedule.teacher_id.name"/></td>
+                                                        <td><t t-field="schedule.room"/></td>
+                                                        <td><t t-field="schedule.session_type"/></td>
+                                                    </tr>
+                                                </t>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <h4>Statistiques de la Classe</h4>
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td><strong>Nombre d'étudiants:</strong></td>
+                                            <td><t t-esc="class_obj.student_count"/> / <t t-esc="class_obj.capacity"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Moyenne de la classe:</strong></td>
+                                            <td><t t-esc="'%.2f' % class_obj.average_class_grade"/>/20</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Nombre de cours:</strong></td>
+                                            <td><t t-esc="len(class_obj.course_ids)"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

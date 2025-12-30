@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Template pour Fiche Étudiant -->
+        <template id="report_student_card">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="student">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div class="text-center">
+                                <h2>Fiche Étudiant</h2>
+                                <h3 t-field="student.name"/>
+                            </div>
+                            
+                            <div class="row mt-4">
+                                <div class="col-6">
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td><strong>Matricule:</strong></td>
+                                            <td t-field="student.registration_number"/>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Date de naissance:</strong></td>
+                                            <td t-field="student.date_of_birth"/>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Âge:</strong></td>
+                                            <td><t t-esc="student.age"/> ans</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Genre:</strong></td>
+                                            <td t-field="student.gender"/>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Groupe sanguin:</strong></td>
+                                            <td t-field="student.blood_group"/>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-6">
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td><strong>Email:</strong></td>
+                                            <td t-field="student.email"/>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Téléphone:</strong></td>
+                                            <td t-field="student.phone"/>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Mobile:</strong></td>
+                                            <td t-field="student.mobile"/>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Classe:</strong></td>
+                                            <td t-field="student.class_id.name"/>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Statut:</strong></td>
+                                            <td t-field="student.status"/>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <h4>Informations du tuteur</h4>
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td><strong>Nom:</strong></td>
+                                            <td t-field="student.guardian_name"/>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Téléphone:</strong></td>
+                                            <td t-field="student.guardian_phone"/>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Email:</strong></td>
+                                            <td t-field="student.guardian_email"/>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Relation:</strong></td>
+                                            <td t-field="student.guardian_relation"/>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <h4>Adresse</h4>
+                                    <p>
+                                        <t t-if="student.street"><t t-field="student.street"/><br/></t>
+                                        <t t-if="student.street2"><t t-field="student.street2"/><br/></t>
+                                        <t t-if="student.city"><t t-field="student.city"/>, </t>
+                                        <t t-if="student.state_id"><t t-field="student.state_id.name"/>, </t>
+                                        <t t-if="student.zip"><t t-field="student.zip"/></t><br/>
+                                        <t t-if="student.country_id"><t t-field="student.country_id.name"/></t>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="row mt-3">
+                                <div class="col-6">
+                                    <h5>Statistiques académiques</h5>
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td><strong>Moyenne générale:</strong></td>
+                                            <td><t t-esc="'%.2f' % student.average_grade"/>/20</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Taux de présence:</strong></td>
+                                            <td><t t-esc="'%.2f' % student.attendance_rate"/>%</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Template pour Rapport de présence -->
+        <template id="report_attendance">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="student">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div class="text-center">
+                                <h2>Rapport de Présence</h2>
+                                <h3 t-field="student.name"/>
+                                <p>Matricule: <t t-field="student.registration_number"/></p>
+                                <p>Classe: <t t-field="student.class_id.name"/></p>
+                            </div>
+                            
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <h4>Résumé</h4>
+                                    <table class="table table-sm">
+                                        <tr>
+                                            <td><strong>Taux de présence:</strong></td>
+                                            <td><t t-esc="'%.2f' % student.attendance_rate"/>%</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Total présences:</strong></td>
+                                            <td><t t-esc="len(student.attendance_ids.filtered(lambda a: a.status == 'present'))"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Total absences:</strong></td>
+                                            <td><t t-esc="len(student.attendance_ids.filtered(lambda a: a.status == 'absent'))"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Total retards:</strong></td>
+                                            <td><t t-esc="len(student.attendance_ids.filtered(lambda a: a.status == 'late'))"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <h4>Détail de la présence</h4>
+                                    <table class="table table-bordered table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Cours</th>
+                                                <th>Statut</th>
+                                                <th>Arrivée</th>
+                                                <th>Départ</th>
+                                                <th>Remarques</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr t-foreach="student.attendance_ids" t-as="attendance">
+                                                <td><t t-field="attendance.date"/></td>
+                                                <td><t t-field="attendance.course_id.name"/></td>
+                                                <td><t t-field="attendance.status"/></td>
+                                                <td><t t-field="attendance.check_in"/></td>
+                                                <td><t t-field="attendance.check_out"/></td>
+                                                <td><t t-field="attendance.remarks"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

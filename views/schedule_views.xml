@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Vue Formulaire Emploi du temps -->
+        <record id="view_school_schedule_form" model="ir.ui.view">
+            <field name="name">school.schedule.form</field>
+            <field name="model">school.schedule</field>
+            <field name="arch" type="xml">
+                <form string="Emploi du temps">
+                    <sheet>
+                        <group>
+                            <group string="Informations">
+                                <field name="class_id"/>
+                                <field name="course_id"/>
+                                <field name="teacher_id"/>
+                                <field name="session_type"/>
+                            </group>
+                            <group string="Horaires">
+                                <field name="day_of_week"/>
+                                <field name="start_time" widget="float_time"/>
+                                <field name="end_time" widget="float_time"/>
+                                <field name="duration"/>
+                                <field name="room"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Période">
+                                <field name="start_date"/>
+                                <field name="end_date"/>
+                            </group>
+                            <group string="Statut">
+                                <field name="active"/>
+                            </group>
+                        </group>
+                        <group string="Notes">
+                            <field name="notes" placeholder="Notes supplémentaires..." nolabel="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vue Arbre Emploi du temps -->
+        <record id="view_school_schedule_tree" model="ir.ui.view">
+            <field name="name">school.schedule.tree</field>
+            <field name="model">school.schedule</field>
+            <field name="arch" type="xml">
+                <tree string="Emploi du temps">
+                    <field name="day_of_week"/>
+                    <field name="start_time" widget="float_time"/>
+                    <field name="end_time" widget="float_time"/>
+                    <field name="duration"/>
+                    <field name="class_id"/>
+                    <field name="course_id"/>
+                    <field name="teacher_id"/>
+                    <field name="room"/>
+                    <field name="session_type"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Vue Calendrier Emploi du temps -->
+        <record id="view_school_schedule_calendar" model="ir.ui.view">
+            <field name="name">school.schedule.calendar</field>
+            <field name="model">school.schedule</field>
+            <field name="arch" type="xml">
+                <calendar string="Emploi du temps" date_start="start_date" color="class_id" mode="week">
+                    <field name="course_id"/>
+                    <field name="teacher_id"/>
+                    <field name="room"/>
+                </calendar>
+            </field>
+        </record>
+
+        <!-- Vue Gantt Emploi du temps -->
+        <record id="view_school_schedule_gantt" model="ir.ui.view">
+            <field name="name">school.schedule.gantt</field>
+            <field name="model">school.schedule</field>
+            <field name="arch" type="xml">
+                <gantt string="Planning" date_start="start_date" date_stop="end_date" default_group_by="class_id">
+                    <field name="course_id"/>
+                    <field name="teacher_id"/>
+                </gantt>
+            </field>
+        </record>
+
+        <!-- Vue Recherche Emploi du temps -->
+        <record id="view_school_schedule_search" model="ir.ui.view">
+            <field name="name">school.schedule.search</field>
+            <field name="model">school.schedule</field>
+            <field name="arch" type="xml">
+                <search string="Rechercher Emploi du temps">
+                    <field name="class_id"/>
+                    <field name="course_id"/>
+                    <field name="teacher_id"/>
+                    <field name="room"/>
+                    <field name="day_of_week"/>
+                    <filter string="Lundi" name="monday" domain="[('day_of_week', '=', 'monday')]"/>
+                    <filter string="Mardi" name="tuesday" domain="[('day_of_week', '=', 'tuesday')]"/>
+                    <filter string="Mercredi" name="wednesday" domain="[('day_of_week', '=', 'wednesday')]"/>
+                    <filter string="Jeudi" name="thursday" domain="[('day_of_week', '=', 'thursday')]"/>
+                    <filter string="Vendredi" name="friday" domain="[('day_of_week', '=', 'friday')]"/>
+                    <separator/>
+                    <filter string="Cours magistral" name="lecture" domain="[('session_type', '=', 'lecture')]"/>
+                    <filter string="TD" name="tutorial" domain="[('session_type', '=', 'tutorial')]"/>
+                    <filter string="TP" name="practical" domain="[('session_type', '=', 'practical')]"/>
+                    <group expand="0" string="Grouper par">
+                        <filter string="Classe" name="group_class" context="{'group_by': 'class_id'}"/>
+                        <filter string="Cours" name="group_course" context="{'group_by': 'course_id'}"/>
+                        <filter string="Enseignant" name="group_teacher" context="{'group_by': 'teacher_id'}"/>
+                        <filter string="Jour" name="group_day" context="{'group_by': 'day_of_week'}"/>
+                        <filter string="Salle" name="group_room" context="{'group_by': 'room'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action Emploi du temps -->
+        <record id="action_school_schedule" model="ir.actions.act_window">
+            <field name="name">Emploi du temps</field>
+            <field name="res_model">school.schedule</field>
+            <field name="view_mode">tree,form,calendar,gantt</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Ajouter un horaire à l'emploi du temps
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

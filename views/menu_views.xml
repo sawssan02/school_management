@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Menu principal -->
+        <menuitem id="menu_school_management_root" 
+                  name="Gestion Scolaire" 
+                  sequence="10"
+                  web_icon="school_management,static/description/icon.png"/>
+
+        <!-- Menu Étudiants -->
+        <menuitem id="menu_school_students" 
+                  name="Étudiants" 
+                  parent="menu_school_management_root" 
+                  sequence="10"/>
+        
+        <menuitem id="menu_school_student_list" 
+                  name="Tous les étudiants" 
+                  parent="menu_school_students" 
+                  action="action_school_student" 
+                  sequence="10"/>
+
+        <!-- Menu Enseignants -->
+        <menuitem id="menu_school_teachers" 
+                  name="Enseignants" 
+                  parent="menu_school_management_root" 
+                  sequence="20"/>
+        
+        <menuitem id="menu_school_teacher_list" 
+                  name="Tous les enseignants" 
+                  parent="menu_school_teachers" 
+                  action="action_school_teacher" 
+                  sequence="10"/>
+
+        <!-- Menu Académique -->
+        <menuitem id="menu_school_academic" 
+                  name="Académique" 
+                  parent="menu_school_management_root" 
+                  sequence="30"/>
+        
+        <menuitem id="menu_school_class_list" 
+                  name="Classes" 
+                  parent="menu_school_academic" 
+                  action="action_school_class" 
+                  sequence="10"/>
+        
+        <menuitem id="menu_school_course_list" 
+                  name="Cours" 
+                  parent="menu_school_academic" 
+                  action="action_school_course" 
+                  sequence="20"/>
+        
+        <menuitem id="menu_school_schedule_list" 
+                  name="Emploi du temps" 
+                  parent="menu_school_academic" 
+                  action="action_school_schedule" 
+                  sequence="30"/>
+
+        <!-- Menu Notes -->
+        <menuitem id="menu_school_grades" 
+                  name="Notes" 
+                  parent="menu_school_management_root" 
+                  sequence="40"/>
+        
+        <menuitem id="menu_school_grade_list" 
+                  name="Toutes les notes" 
+                  parent="menu_school_grades" 
+                  action="action_school_grade" 
+                  sequence="10"/>
+
+        <!-- Menu Présence -->
+        <menuitem id="menu_school_attendance" 
+                  name="Présence" 
+                  parent="menu_school_management_root" 
+                  sequence="50"/>
+        
+        <menuitem id="menu_school_attendance_list" 
+                  name="Présence journalière" 
+                  parent="menu_school_attendance" 
+                  action="action_school_attendance" 
+                  sequence="10"/>
+        
+        <menuitem id="menu_school_attendance_report_menu" 
+                  name="Rapports de présence" 
+                  parent="menu_school_attendance" 
+                  action="action_school_attendance_report" 
+                  sequence="20"/>
+
+        <!-- Menu Rapports -->
+        <menuitem id="menu_school_reports" 
+                  name="Rapports" 
+                  parent="menu_school_management_root" 
+                  sequence="60"/>
+
+    </data>
+</odoo>

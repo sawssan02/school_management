@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Vue Formulaire Note -->
+        <record id="view_school_grade_form" model="ir.ui.view">
+            <field name="name">school.grade.form</field>
+            <field name="model">school.grade</field>
+            <field name="arch" type="xml">
+                <form string="Note">
+                    <sheet>
+                        <group>
+                            <group string="Étudiant et Cours">
+                                <field name="student_id"/>
+                                <field name="course_id"/>
+                                <field name="evaluation_type"/>
+                                <field name="semester"/>
+                            </group>
+                            <group string="Note">
+                                <field name="grade"/>
+                                <field name="max_grade"/>
+                                <field name="percentage" widget="progressbar"/>
+                                <field name="grade_letter"/>
+                                <field name="date"/>
+                                <field name="graded_by"/>
+                            </group>
+                        </group>
+                        <group string="Remarques">
+                            <field name="remarks" placeholder="Remarques sur l'évaluation..." nolabel="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vue Arbre Note -->
+        <record id="view_school_grade_tree" model="ir.ui.view">
+            <field name="name">school.grade.tree</field>
+            <field name="model">school.grade</field>
+            <field name="arch" type="xml">
+                <tree string="Notes" decoration-success="percentage &gt;= 90" decoration-info="percentage &gt;= 75" decoration-warning="percentage &gt;= 60" decoration-danger="percentage &lt; 60">
+                    <field name="date"/>
+                    <field name="student_id"/>
+                    <field name="course_id"/>
+                    <field name="evaluation_type"/>
+                    <field name="semester"/>
+                    <field name="grade"/>
+                    <field name="max_grade"/>
+                    <field name="percentage"/>
+                    <field name="grade_letter"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Vue Pivot Note -->
+        <record id="view_school_grade_pivot" model="ir.ui.view">
+            <field name="name">school.grade.pivot</field>
+            <field name="model">school.grade</field>
+            <field name="arch" type="xml">
+                <pivot string="Analyse des Notes">
+                    <field name="student_id" type="row"/>
+                    <field name="course_id" type="col"/>
+                    <field name="grade" type="measure"/>
+                    <field name="percentage" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- Vue Graphique Note -->
+        <record id="view_school_grade_graph" model="ir.ui.view">
+            <field name="name">school.grade.graph</field>
+            <field name="model">school.grade</field>
+            <field name="arch" type="xml">
+                <graph string="Graphique des Notes" type="bar">
+                    <field name="course_id"/>
+                    <field name="percentage" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Vue Recherche Note -->
+        <record id="view_school_grade_search" model="ir.ui.view">
+            <field name="name">school.grade.search</field>
+            <field name="model">school.grade</field>
+            <field name="arch" type="xml">
+                <search string="Rechercher Notes">
+                    <field name="student_id"/>
+                    <field name="course_id"/>
+                    <field name="evaluation_type"/>
+                    <field name="semester"/>
+                    <field name="date"/>
+                    <filter string="Semestre 1" name="semester_1" domain="[('semester', '=', '1')]"/>
+                    <filter string="Semestre 2" name="semester_2" domain="[('semester', '=', '2')]"/>
+                    <separator/>
+                    <filter string="Excellent (A+)" name="grade_a_plus" domain="[('grade_letter', '=', 'a+')]"/>
+                    <filter string="Très bien (A)" name="grade_a" domain="[('grade_letter', '=', 'a')]"/>
+                    <filter string="Échec (F)" name="grade_f" domain="[('grade_letter', '=', 'f')]"/>
+                    <group expand="0" string="Grouper par">
+                        <filter string="Étudiant" name="group_student" context="{'group_by': 'student_id'}"/>
+                        <filter string="Cours" name="group_course" context="{'group_by': 'course_id'}"/>
+                        <filter string="Type d'évaluation" name="group_type" context="{'group_by': 'evaluation_type'}"/>
+                        <filter string="Semestre" name="group_semester" context="{'group_by': 'semester'}"/>
+                        <filter string="Date" name="group_date" context="{'group_by': 'date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action Note -->
+        <record id="action_school_grade" model="ir.actions.act_window">
+            <field name="name">Notes</field>
+            <field name="res_model">school.grade</field>
+            <field name="view_mode">tree,form,pivot,graph</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Ajouter une nouvelle note
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

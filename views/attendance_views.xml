@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Vue Formulaire Présence -->
+        <record id="view_school_attendance_form" model="ir.ui.view">
+            <field name="name">school.attendance.form</field>
+            <field name="model">school.attendance</field>
+            <field name="arch" type="xml">
+                <form string="Présence">
+                    <sheet>
+                        <group>
+                            <group string="Informations">
+                                <field name="student_id"/>
+                                <field name="class_id"/>
+                                <field name="course_id"/>
+                                <field name="schedule_id"/>
+                                <field name="date"/>
+                            </group>
+                            <group string="Statut">
+                                <field name="status"/>
+                                <field name="check_in"/>
+                                <field name="check_out"/>
+                                <field name="marked_by"/>
+                            </group>
+                        </group>
+                        <group string="Raison de l'absence" invisible="status == 'present'">
+                            <field name="reason" placeholder="Raison de l'absence..." nolabel="1"/>
+                        </group>
+                        <group string="Remarques">
+                            <field name="remarks" placeholder="Remarques supplémentaires..." nolabel="1"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vue Arbre Présence -->
+        <record id="view_school_attendance_tree" model="ir.ui.view">
+            <field name="name">school.attendance.tree</field>
+            <field name="model">school.attendance</field>
+            <field name="arch" type="xml">
+                <tree string="Présence" decoration-success="status == 'present'" decoration-danger="status == 'absent'" decoration-warning="status == 'late'" decoration-info="status == 'excused'">
+                    <field name="date"/>
+                    <field name="student_id"/>
+                    <field name="class_id"/>
+                    <field name="course_id"/>
+                    <field name="status"/>
+                    <field name="check_in"/>
+                    <field name="check_out"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Vue Calendrier Présence -->
+        <record id="view_school_attendance_calendar" model="ir.ui.view">
+            <field name="name">school.attendance.calendar</field>
+            <field name="model">school.attendance</field>
+            <field name="arch" type="xml">
+                <calendar string="Calendrier de présence" date_start="date" color="status" mode="month">
+                    <field name="student_id"/>
+                    <field name="course_id"/>
+                    <field name="status"/>
+                </calendar>
+            </field>
+        </record>
+
+        <!-- Vue Pivot Présence -->
+        <record id="view_school_attendance_pivot" model="ir.ui.view">
+            <field name="name">school.attendance.pivot</field>
+            <field name="model">school.attendance</field>
+            <field name="arch" type="xml">
+                <pivot string="Analyse de présence">
+                    <field name="student_id" type="row"/>
+                    <field name="status" type="col"/>
+                    <field name="date" interval="month" type="col"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- Vue Graphique Présence -->
+        <record id="view_school_attendance_graph" model="ir.ui.view">
+            <field name="name">school.attendance.graph</field>
+            <field name="model">school.attendance</field>
+            <field name="arch" type="xml">
+                <graph string="Graphique de présence" type="pie">
+                    <field name="status"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Vue Recherche Présence -->
+        <record id="view_school_attendance_search" model="ir.ui.view">
+            <field name="name">school.attendance.search</field>
+            <field name="model">school.attendance</field>
+            <field name="arch" type="xml">
+                <search string="Rechercher Présence">
+                    <field name="student_id"/>
+                    <field name="class_id"/>
+                    <field name="course_id"/>
+                    <field name="date"/>
+                    <field name="status"/>
+                    <filter string="Présent" name="present" domain="[('status', '=', 'present')]"/>
+                    <filter string="Absent" name="absent" domain="[('status', '=', 'absent')]"/>
+                    <filter string="En retard" name="late" domain="[('status', '=', 'late')]"/>
+                    <filter string="Absent justifié" name="excused" domain="[('status', '=', 'excused')]"/>
+                    <separator/>
+                    <filter string="Aujourd'hui" name="today" domain="[('date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Cette semaine" name="this_week" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                    <filter string="Ce mois" name="this_month" domain="[('date', '&gt;=', (context_today().replace(day=1)).strftime('%Y-%m-%d'))]"/>
+                    <group expand="0" string="Grouper par">
+                        <filter string="Étudiant" name="group_student" context="{'group_by': 'student_id'}"/>
+                        <filter string="Classe" name="group_class" context="{'group_by': 'class_id'}"/>
+                        <filter string="Cours" name="group_course" context="{'group_by': 'course_id'}"/>
+                        <filter string="Statut" name="group_status" context="{'group_by': 'status'}"/>
+                        <filter string="Date" name="group_date" context="{'group_by': 'date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action Présence -->
+        <record id="action_school_attendance" model="ir.actions.act_window">
+            <field name="name">Présence</field>
+            <field name="res_model">school.attendance</field>
+            <field name="view_mode">tree,form,calendar,pivot,graph</field>
+            <field name="context">{'search_default_today': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Marquer la présence
+                </p>
+            </field>
+        </record>
+
+        <!-- Action Rapport de présence -->
+        <record id="action_school_attendance_report" model="ir.actions.act_window">
+            <field name="name">Rapport de présence</field>
+            <field name="res_model">school.attendance.report</field>
+            <field name="view_mode">pivot,graph</field>
+        </record>
+
+    </data>
+</odoo>

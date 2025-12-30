@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Vue Formulaire Cours -->
+        <record id="view_school_course_form" model="ir.ui.view">
+            <field name="name">school.course.form</field>
+            <field name="model">school.course</field>
+            <field name="arch" type="xml">
+                <form string="Cours">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Nom du cours" required="1"/>
+                            </h1>
+                            <h2>
+                                <field name="code"/>
+                            </h2>
+                        </div>
+                        <group>
+                            <group string="Informations">
+                                <field name="teacher_id"/>
+                                <field name="class_id"/>
+                                <field name="credits"/>
+                                <field name="hours_per_week"/>
+                            </group>
+                            <group string="Période">
+                                <field name="start_date"/>
+                                <field name="end_date"/>
+                                <field name="total_students"/>
+                                <field name="average_course_grade"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description" placeholder="Description du cours..."/>
+                            <field name="syllabus" placeholder="Programme du cours..."/>
+                        </group>
+                        <notebook>
+                            <page string="Notes">
+                                <field name="grade_ids">
+                                    <tree>
+                                        <field name="date"/>
+                                        <field name="student_id"/>
+                                        <field name="evaluation_type"/>
+                                        <field name="grade"/>
+                                        <field name="percentage"/>
+                                        <field name="grade_letter"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Emploi du temps">
+                                <field name="schedule_ids">
+                                    <tree>
+                                        <field name="day_of_week"/>
+                                        <field name="start_time" widget="float_time"/>
+                                        <field name="end_time" widget="float_time"/>
+                                        <field name="room"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vue Arbre Cours -->
+        <record id="view_school_course_tree" model="ir.ui.view">
+            <field name="name">school.course.tree</field>
+            <field name="model">school.course</field>
+            <field name="arch" type="xml">
+                <tree string="Cours">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="teacher_id"/>
+                    <field name="class_id"/>
+                    <field name="credits"/>
+                    <field name="hours_per_week"/>
+                    <field name="average_course_grade"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Vue Recherche Cours -->
+        <record id="view_school_course_search" model="ir.ui.view">
+            <field name="name">school.course.search</field>
+            <field name="model">school.course</field>
+            <field name="arch" type="xml">
+                <search string="Rechercher Cours">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="teacher_id"/>
+                    <field name="class_id"/>
+                    <group expand="0" string="Grouper par">
+                        <filter string="Enseignant" name="group_teacher" context="{'group_by': 'teacher_id'}"/>
+                        <filter string="Classe" name="group_class" context="{'group_by': 'class_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action Cours -->
+        <record id="action_school_course" model="ir.actions.act_window">
+            <field name="name">Cours</field>
+            <field name="res_model">school.course</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Créer un nouveau cours
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

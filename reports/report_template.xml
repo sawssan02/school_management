@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Action de rapport pour Fiche étudiant -->
+        <record id="action_report_student_card" model="ir.actions.report">
+            <field name="name">Fiche Étudiant</field>
+            <field name="model">school.student</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">school_management.report_student_card</field>
+            <field name="report_file">school_management.report_student_card</field>
+            <field name="binding_model_id" ref="model_school_student"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Action de rapport pour Bulletin de notes -->
+        <record id="action_report_bulletin" model="ir.actions.report">
+            <field name="name">Bulletin de Notes</field>
+            <field name="model">school.student</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">school_management.report_bulletin</field>
+            <field name="report_file">school_management.report_bulletin</field>
+            <field name="binding_model_id" ref="model_school_student"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Action de rapport pour Emploi du temps de la classe -->
+        <record id="action_report_class_schedule" model="ir.actions.report">
+            <field name="name">Emploi du Temps</field>
+            <field name="model">school.class</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">school_management.report_class_schedule</field>
+            <field name="report_file">school_management.report_class_schedule</field>
+            <field name="binding_model_id" ref="model_school_class"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Action de rapport pour Rapport de présence -->
+        <record id="action_report_attendance" model="ir.actions.report">
+            <field name="name">Rapport de Présence</field>
+            <field name="model">school.student</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">school_management.report_attendance</field>
+            <field name="report_file">school_management.report_attendance</field>
+            <field name="binding_model_id" ref="model_school_student"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>
